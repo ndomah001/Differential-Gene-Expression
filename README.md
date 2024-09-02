@@ -1,4 +1,9 @@
 # Differential-Gene-Expression-Analysis
+## ❓ What is Differential Gene Expression?
+Differential gene expression (DGE) is a method used to identify changes in gene expression levels between different conditions or groups. It helps researchers understand how genes are regulated under various circumstances, such as between healthy and diseased tissues, or between different developmental stages.
+
+In a typical DGE analysis, you compare gene expression profiles from two or more conditions (e.g., treated vs. untreated samples). The goal is to determine which genes are significantly upregulated or downregulated in one condition relative to another. This can reveal insights into the biological processes underlying the conditions being studied and identify potential biomarkers or therapeutic targets. The most common way to perform an analysis is using the DESeq2 package in R.
+
 ## 📝 Background
 This project was inspired by [this study from ScienceSignaling](https://www.science.org/doi/10.1126/scisignal.adf1947#sec-4) that identified a long noncoding RNA (lncRNA) named LETS1, which amplifies the TGF-β signaling pathway, known for driving epithelial-to-mesenchymal transition (EMT) and cancer progression. LETS1 stabilizes the TGF-β type I receptor (TβRI) by interacting with NFAT5, leading to the suppression of SMAD7, a protein that typically degrades TβRI. This creates a feedback loop that enhances TGF-β signaling, promoting cancer cell migration and invasion. LETS1's role was confirmed in breast and lung cancer cells, suggesting it may contribute to cancer metastasis in patients.
 
