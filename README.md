@@ -1,4 +1,4 @@
-# Differential-Gene-Expression-Analysis
+# Differential Gene Expression Analysis
 ## ❓ What is Differential Gene Expression?
 Differential gene expression (DGE) is a method used to identify changes in gene expression levels between different conditions or groups. It helps researchers understand how genes are regulated under various circumstances, such as between healthy and diseased tissues, or between different developmental stages.
 
