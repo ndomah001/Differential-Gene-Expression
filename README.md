@@ -7,16 +7,25 @@ I then performed a differential gene expression analysis (in R using DESeq2) on 
 ## 📊 Visualizations
 ### Dispersion Estimates
 Visualize the variability of gene expression across samples. 
+
 ![de](https://github.com/ndomah001/Differential-Gene-Expression-Analysis/blob/main/Dispersion%20Estimates.png)
+
 ### Histogram of p-values
 The peak near 0 indicates a high number of differentially expressed genes. 
+
 ![h](https://github.com/ndomah001/Differential-Gene-Expression-Analysis/blob/main/p-value%20Histogram.png)
+
 ### Volcano Plot
 Visualize the relationship between the magnitude of change (log fold change) and statistical significance (p-value) of genes, as well as up/down-regulation. 
+
 ![vp](https://github.com/ndomah001/Differential-Gene-Expression-Analysis/blob/main/Volcano%20Plot.png)
+
 ### PCA Plot
 Reduce dimensionality of data and visualize sample relationships.
+
 ![pca](https://github.com/ndomah001/Differential-Gene-Expression-Analysis/blob/main/PCA%20Plot.png)
+
 ### Heatmap
 Visualize expression levels of log transformed normalized counts using top 10 genes. 
+
 ![hmp](https://github.com/ndomah001/Differential-Gene-Expression-Analysis/blob/main/Heatmap%20(top%2010%20genes).png)
