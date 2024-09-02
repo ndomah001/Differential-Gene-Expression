@@ -12,7 +12,7 @@ Visualize the variability of gene expression across samples.
 The peak near 0 indicates a high number of differentially expressed genes. 
 ![h](https://github.com/ndomah001/Differential-Gene-Expression-Analysis/blob/main/p-value%20Histogram.png)
 ### Volcano Plot
-Visualize the relationship between the magnitude of change (log fold change) and statistical significance (p-value) of genes, as well as up- and down-regulation. 
+Visualize the relationship between the magnitude of change (log fold change) and statistical significance (p-value) of genes, as well as up/down-regulation. 
 ![vp](https://github.com/ndomah001/Differential-Gene-Expression-Analysis/blob/main/Volcano%20Plot.png)
 ### PCA Plot
 Reduce dimensionality of data and visualize sample relationships.
