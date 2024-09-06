@@ -9,7 +9,7 @@ This project was inspired by [this study from ScienceSignaling](https://www.scie
 
 I then performed a differential gene expression analysis (in R using DESeq2) on the RNA-seq counts extracted from [NCBI GEO (Gene Experssion Omnibus) - GSE203119](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE203119). 
 
-## 📊 Visualizations
+## 📊 Results
 ### Dispersion Estimates
 Dispersion reflects the variability of gene expression, and accurately estimating dispersion is crucial for reliable differential expression analysis.
 
