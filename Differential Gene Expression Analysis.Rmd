@@ -1,0 +1,219 @@
+---
+title: "Differential Gene Expression Analysis"
+output: rmarkdown::github_document
+---
+
+# Setup
+
+## Load libraries
+
+```{r}
+library(DESeq2)
+library(pheatmap)
+library(RColorBrewer)
+```
+
+## Read count data
+
+```{r}
+count_table <- read.csv('raw_counts.tsv', sep='\t', row.names=1)
+head(count_table)
+```
+
+```{r}
+dim(count_table)
+```
+
+## Read the sample information
+
+```{r}
+sample_info <- read.csv('design.tsv', sep='\t', row.names=1)
+sample_info
+```
+
+```{r}
+dim(sample_info)
+```
+
+## Set factor levels
+
+```{r}
+factors <- factor(sample_info$Group)
+groups <- unique(sample_info$Group)
+
+sample_info$Group
+```
+
+```{r}
+groups
+```
+
+## We want the control group to be after tgf-beta
+
+```{r}
+groups <- rev(groups)
+groups
+```
+
+```{r}
+sample_info$Group <- factors
+sample_info$Group
+```
+
+## Create DESeq object
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData=count_table, colData=sample_info, design=~Group)
+```
+
+## Set the reference for the Group factor
+
+```{r}
+dds$Group <- relevel(dds$Group, ref='control')
+```
+
+## Filter out low gene counts
+
+Keep genes with at least N counts \>= 10, where N = size of smallest group
+
+```{r}
+keep <- rowSums(counts(dds)>=10) >= min(table(sample_info$Group))
+dds <- dds[keep,]
+```
+
+## Perform statistical tests and get result
+
+```{r}
+dds <- DESeq(dds, test='Wald', sfType='poscount')
+
+deseq_result <- results(dds)
+deseq_result <- as.data.frame(deseq_result)
+head(deseq_result)
+```
+
+```{r}
+dim(deseq_result)
+```
+
+## Add 'GeneName' column, save to tsv file
+
+```{r}
+deseq_result$GeneName <- row.names(deseq_result)
+
+deseq_result <- subset(deseq_result,
+                       select=c('GeneName', 'padj', 'pvalue', 'lfcSE', 'stat',  'log2FoldChange', 'baseMean'))
+
+head(deseq_result)
+```
+
+```{r}
+write.table(deseq_result, file='deseq_result.all.tsv', row.names=F, sep='\t')
+```
+
+## Extract DE genes with padj \< 0.05 and log2foldchange \<= -1 or \>= 1
+
+```{r}
+deg <- subset(deseq_result, padj<0.05 & abs(log2FoldChange)>=1)
+dim(deg)
+```
+
+```{r}
+dim(deseq_result)
+```
+
+## Order by padj ascending
+
+```{r}
+deg <- deg[order(deg$padj),]
+head(deg)
+```
+
+## Write to tsv file
+
+```{r}
+write.table(deg, file='deseq_deg.tsv', row.names=F, sep='\t')
+```
+
+# Gene Expression Data Visualization
+
+## Plot dispersion estimates
+
+```{r}
+plotDispEsts(dds, main='GSE203159 Dispersion Estimates')
+```
+
+## Create histogram of p-values
+
+```{r}
+hist(deseq_result$padj, breaks=seq(0,1,length=21), col='grey', border='white', xlab='', ylab='', ylim=c(0,8000), main='GSE203159 Frequencies of padj-values')
+```
+
+## Volcano plot
+
+### Set colors
+
+```{r}
+old.pal <- palette(c('#00BFFF', '#FF3030'))
+```
+
+### Set margin size
+
+```{r}
+par(mar=c(4,4,2,1), cex.main=1.5)
+```
+
+### Plot values
+
+Add legend for up- and down-regulation
+
+```{r}
+plot(deseq_result$log2FoldChange, -log10(deseq_result$padj), main='tgf-beta vs control', xlab='log2FC', ylab='-log10(Padj)', pch=20, cex=0.5)
+
+with(subset(deseq_result, padj<0.05 & abs(log2FoldChange)>=1), points(log2FoldChange, -log10(padj), pch=20, col=(sign(log2FoldChange)+3)/2, cex=1))
+
+legend('bottomleft', title=paste('Padj<', 0.05, sep=''), legend=c('down', 'up'), pch=20, col=1:2)
+```
+
+## PCA plot
+
+### Variance stabilizing transformation
+
+```{r}
+vsd <- vst(dds, blind=FALSE)
+```
+
+### Use transformed values to generate PCA plot
+
+```{r}
+plotPCA(vsd, intgroup=c('Group'))
+```
+
+*Note: I couldn't find a fix to make the PCA plot's y-axis longer. In the future, I could manually plot the points but for the sake of this project I will continue.*
+
+## Heatmaps
+
+Heatmap of log transformed normalized counts using the top 10 genes
+
+```{r}
+normalized_counts <- counts(dds, normalized=T)
+head(normalized_counts)
+```
+
+```{r}
+transformed_counts <- log2(normalized_counts + 1)
+head(transformed_counts)
+```
+
+```{r}
+top_hits <- row.names(deg[1:10, ])
+top_hits
+```
+
+```{r}
+top_hits <- transformed_counts[top_hits,]
+head(top_hits)
+```
+
+```{r}
+pheatmap(top_hits, cluster_rows=FALSE, cluster_cols=FALSE)
+```
